@@ -9,7 +9,7 @@ all_Spike=[];
 all_EODR=[];
 [f_names]=filenames_Test; % loads all the file names
 
-for i = 1
+for i = 2
     %% loading files
     [FileName,PathName]=uigetfile('*.avi','Select the Video');
     obj = VideoReader([PathName,   FileName]);

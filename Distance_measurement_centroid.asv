@@ -54,7 +54,7 @@ for i= 2 % enter the file number
     st_pt=1;
     k=1;
     e=1;
-    poly_med=2;% 1: curve fitting, 2: median , none or only centroid: 0
+    poly_med=0;% 1: curve fitting, 2: median , none or only centroid: 0
     len_l=size(S_frames);
     C_Position=[];
     H_Position=[];
@@ -68,7 +68,7 @@ for i= 2 % enter the file number
     visualization=0;% 2_centroid, 0_none, tail and center= '1'
     
     
-    for jj=2%1:length(S_frames); Frame_selector(1)1:len_l(1)
+    for jj=1:length(S_frames)%1:length(S_frames); Frame_selector(1)1:len_l(1)
         try
             % this function calculates the head, centroid and tail positions
             
@@ -77,9 +77,7 @@ for i= 2 % enter the file number
             %[H_position,C_position,T_position]=HCT_tracker_v3(obj,S_frames(jj,1),S_frames(jj,3),BG(jj,1),BG(jj,2),visualization,st_pt,threshold,poly_med,mask);
             
             close all
-            H_Position=[H_Position;H_position];
             C_Position=[C_Position;C_position];
-            T_Position=[T_Position;T_position];
             
             if jj==1
                 c_Position=C_position;
@@ -103,9 +101,7 @@ for i= 2 % enter the file number
     end
     
     % storing data
-    data.H_Position=H_Position;
     data.C_Position=C_Position;
-    data.T_Position=T_Position;
     data.c_Position=c_Position;
     data.mask=mask;
     eval([f_names(i,1:16),'=data;'])
@@ -118,29 +114,27 @@ end
 %% visualization to check where the head and tail flips
 ct_im=read(obj,S_frames(jj,1));
 figure
-for i=1:length(C_Position)
-    
-    imagesc(ct_im)
-    set(gcf, 'Position', get(0,'Screensize')); % Maximize figure.
-    hold on
-    plot(C_Position(i,1),C_Position(i,2),'go','MarkerFaceColor','r')
-    hold off
-    pause(0.01)
-end
-hold on
-plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','r')
-
-
-%% visualization to check where the head and tail flips
+% for i=1:length(C_Position)
+%     
+%     imagesc(ct_im)
+%     set(gcf, 'Position', get(0,'Screensize')); % Maximize figure.
+%     hold on
+%     plot(C_Position(i,1),C_Position(i,2),'go','MarkerFaceColor','r')
+%     hold off
+%     pause(0.01)
+% end
+% hold on
+% plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','r')
+% 
+% 
+% %% visualization to check where the head and tail flips
 % ct_im=read(obj,S_frames(jj,1));
 % figure
 % for i=1:length(C_Position)
 %     
 %     imshow(ct_im)
 %     hold on
-%     plot(H_Position(i,1),H_Position(i,2),'ro','MarkerFaceColor','r')
 %     plot(C_Position(i,1),C_Position(i,2),'go','MarkerFaceColor','g')
-%     plot(T_Position(i,1),T_Position(i,2),'bo','MarkerFaceColor','b')
 %     hold off
 %     pause(0.01)
 % end
@@ -148,6 +142,4 @@ plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','r')
 figure
 imshow(ct_im)
 hold on
-plot(H_Position(:,1),H_Position(:,2),'ro','MarkerFaceColor','r')
 plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','g')
-plot(T_Position(:,1),T_Position(:,2),'bo','MarkerFaceColor','b')

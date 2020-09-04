@@ -14,7 +14,7 @@ bg_e;  % background end image
 manual_threshold=threshold; % threshold after image substraction
 
 % Usage of mask
-use_mask=2; % if you want to use mask, if yes then '1'(for home compartment and circular mask), '2'(only for rectangular mask) else '0',
+use_mask=0; % if you want to use mask, if yes then '1'(for home compartment and circular mask), '2'(only for rectangular mask) else '0',
 
 % polyval or median for finding the midline of the fish
 blob_med=poly_med; % 1: curve fitting, 2: median , none or only centroid: 0
@@ -55,11 +55,12 @@ if st_pt==1
 else
     ct_roid(1,:)=ct_s;
 end
+%bg_s=1430; bg_e=1480;
 %% Background calculation
 Bg_I=read(obj,[bg_s bg_e]);
 Bg_I=double(mean(Bg_I,3));
 Bg_I=mean(Bg_I,4);
-
+%imshow(Bg_I)
 %%
 %start_tr+1:end_tr
 i=2;
@@ -86,7 +87,7 @@ for tt=end_tr-1:-1:start_tr
     
     J3 = Use_I > manual_threshold;
     BW = imfill(J3,'holes');
-    
+    imshow(BW)
     %%
     % finding centroid
     s=regionprops(BW,Use_I,'WeightedCentroid'); %Use_I

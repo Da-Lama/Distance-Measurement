@@ -8,5 +8,7 @@ message = sprintf('Left click to create a polygon.\nSimply lift the mouse button
 uiwait(msgbox(message));
 hFH = impoly();
 h_mask = hFH.createMask();
+% rFH = imrect();
+% r_mask=rFH.createMask();
 
 end 
