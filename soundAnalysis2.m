@@ -2,7 +2,7 @@ function [EOD,Spike,EODR]=soundAnalysis2(sound)
 
 
 % [value,sample]=findpeaks(diff([sound(1); sound]),'MINPEAKHEIGHT',0.5,'MINPEAKDISTANCE',150);
-[value,sample]=findpeaks( sound,'MINPEAKHEIGHT',0.003,'MINPEAKDISTANCE',150);
+[value,sample]=findpeaks( sound,'MINPEAKHEIGHT',.4,'MINPEAKDISTANCE',150);
 EOD=zeros([length(sound),1]); % new timevector
 for j=1:length(sample);
     EOD(sample(j))=1;

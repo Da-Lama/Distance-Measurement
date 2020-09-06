@@ -36,41 +36,87 @@ data=eval(f_names(i,1:16));
 
 S_frames = data.S_frames;
 lng=size(S_frames);
-tet1=(SR*ana(1,1)/FR);
-tet2=(SR*ana(1,2)/FR);
+
 for t = 1
-    
     ana= S_frames(t,1:3);
+    
+    tet1=(SR*ana(1,1)/FR);
+    tet2=(SR*ana(1,3)/FR);
     [pks_eod,locs_eod,pks_ttl,locs_ttl]=eod_ttl_data(eod(tet1:tet2),time(tet1:tet2),ttl(tet1:tet2));
     
-    [EOD,Spike,EODR]=soundAnalysis2(eod(tet1:tet2));
+    [EOD,Spike,EODR]=soundAnalysis2(-eod(tet1:tet2));
     
+    data.EODR=EODR;
+    data.EOD_pos=EODR(locs_ttl);
+    eval([f_names(i,1:16),'=data;'])
+    save(f_names(i,1:20),f_names(i,1:16))
     
 end
 
-
 %%
-subplot(2,1,1)
-plot(a(:,2))
-subplot(2,1,2)
-plot(a(:,1))
+subplot(3,1,1)
+
+plot(EOD)
+subplot(3,1,2)
+plot(Spike)
+subplot(3,1,3)
 plot(EODR)
-xn = [];
-xm= xn-50;
 
-x=1:length(ttl((SR*ana(1,1)/FR:SR*ana(1,2)/FR)));
+
+
+ii=1;
+for i = ana(1,1):ana(1,3)
+    
+    frame_times(ii,1)=(SR*i/FR);
+    ii=ii+1;
+
+    
+end 
+format long
+tim=time(tet1:tet2);
+
+EODR(locs_ttl);
+find(frame_times==tim);
+
+for f = 1: length(frame_times)
+    indx(f,1)= min((tim-frame_times(f)));
+end 
+
+(tim-frame_times(f));
+
+i = ana(1,1):ana(1,3);
+%%
+% % subplot(2,1,1)
+% % plot(a(:,2))
+% % subplot(2,1,2)
+% % plot(a(:,1))
+% % plot(EODR)
+% % xn = [];
+% % xm= xn-50;
+% % 
+% % x=1:length(ttl((SR*ana(1,1)/FR:SR*ana(1,2)/FR)));
+% % figure
+% % plot(ttl((SR*ana(1,1)/FR:SR*ana(1,2)/FR)))
+% % hold on
+% % plot(x(locs_ttl),pks_ttl,'ko','markerfacecolor',[1 0 0])
+% % 
+% % x1=1:length(eod((SR*ana(1,1)/FR:SR*ana(1,2)/FR)));
+% % figure
+% % plot(eod((SR*ana(1,1)/FR:SR*ana(1,2)/FR)))
+% % hold on
+% % plot(x1(locs_eod),-pks_eod,'ko','markerfacecolor',[1 0 0])
+% % 
+% % 360/12
+% % (21460/10000)*30+53947
+ct_im=read(obj,S_frames(1,1));
+C_Position=data.C_Position;
+eod_pos=data.EOD_pos;
 figure
-plot(ttl((SR*ana(1,1)/FR:SR*ana(1,2)/FR)))
+imshow(ct_im)
 hold on
-plot(x(locs_ttl),pks_ttl,'ko','markerfacecolor',[1 0 0])
+plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','g')
 
-x1=1:length(eod((SR*ana(1,1)/FR:SR*ana(1,2)/FR)));
 figure
-plot(eod((SR*ana(1,1)/FR:SR*ana(1,2)/FR)))
+imshow(ct_im)
 hold on
-plot(x1(locs_eod),-pks_eod,'ko','markerfacecolor',[1 0 0])
-
-360/12
-(21460/10000)*30+53947
-
-
+scatter(C_Position(:,1),C_Position(:,2),20,eod_pos,'filled')

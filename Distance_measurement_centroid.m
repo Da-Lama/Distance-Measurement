@@ -68,7 +68,7 @@ for i= 2 % enter the file number
     visualization=0;% 2_centroid, 0_none, tail and center= '1'
     
     
-    for jj=1:length(S_frames)%1:length(S_frames); Frame_selector(1)1:len_l(1)
+    for jj=1%1:length(S_frames); Frame_selector(1)1:len_l(1)
         try
             % this function calculates the head, centroid and tail positions
             
@@ -113,31 +113,8 @@ end
 
 %% visualization to check where the head and tail flips
 ct_im=read(obj,S_frames(jj,1));
-figure
-% for i=1:length(C_Position)
-%     
-%     imagesc(ct_im)
-%     set(gcf, 'Position', get(0,'Screensize')); % Maximize figure.
-%     hold on
-%     plot(C_Position(i,1),C_Position(i,2),'go','MarkerFaceColor','r')
-%     hold off
-%     pause(0.01)
-% end
-% hold on
-% plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','r')
-% 
-% 
-% %% visualization to check where the head and tail flips
-% ct_im=read(obj,S_frames(jj,1));
-% figure
-% for i=1:length(C_Position)
-%     
-%     imshow(ct_im)
-%     hold on
-%     plot(C_Position(i,1),C_Position(i,2),'go','MarkerFaceColor','g')
-%     hold off
-%     pause(0.01)
-% end
+
+
 
 figure
 imshow(ct_im)
