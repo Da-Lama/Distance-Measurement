@@ -81,7 +81,8 @@ for i= 2 % enter the file number
     EOD_pos=[];
     eod_Pos=[];
     % things to play around with
-    fr=2;
+    fr=3;
+    ex=0;
     threshold=20;% play with this for better tracking
     visualization=0;% 2_centroid, 0_none, tail and center= '1'
     
@@ -91,18 +92,21 @@ for i= 2 % enter the file number
             % this function calculates the head, centroid and tail positions
             
             [C_position]=HCT_tracker_v2(obj,S_frames(jj,1),S_frames(jj,fr)+ex,BG(jj,1),BG(jj,2),visualization,st_pt,threshold,poly_med,mask);
+            % gets the frame numbers
             ana= S_frames(jj,1:3);
-            
+            %gets the times
             tet1=(SR*ana(1,1)/FR);
             tet2=(SR*(ana(1,fr)+ex)/FR);
+            % this finds eods and camera ttls within the above time slots
             [pks_eod,locs_eod,pks_ttl,locs_ttl]=eod_ttl_data(eod(tet1:tet2),time(tet1:tet2),ttl(tet1:tet2));
-            
+            % gets the eods, calculates eod rate
             [EOD,Spike,EODR]=soundAnalysis2(-eod(tet1:tet2));
             %[H_position,C_position,T_position]=HCT_tracker_v3(obj,S_frames(jj,1),S_frames(jj,3),BG(jj,1),BG(jj,2),visualization,st_pt,threshold,poly_med,mask);
             
             close all
+            %stores centroid position, and eod rates
             C_Position=[C_Position;C_position];
-            eod_pos =EODR(locs_ttl);
+            eod_pos =EODR(locs_ttl);% finds the eod rate at camera ttl times. 
             EOD_pos=[EOD_pos;eod_pos];
             
             if jj==1
@@ -141,107 +145,6 @@ for i= 2 % enter the file number
     
 end
 
-
-%% visualization to check where the head and tail flips
-
-eod_Pos=data.eod_Pos;
-c_Position=data.c_Position;
-C_Position=data.C_Position;
-ct_im=read(obj,S_frames(1,1));
-
-for i = 1: length(S_frames)
-    
-    ana= S_frames(i,1:3);
-    fr_no(i,1)=ana(1,fr)-ana(1,1);
-    fr_nu(i,1)=length(find(eod_Pos(:,i)>0));
-    
-end
-
-figure
-imshow(ct_im)
-hold on
-plot(C_Position(:,1),C_Position(:,2),'go','MarkerFaceColor','g')
-
-%%
-figure
-imshow(ct_im)
-hold on
-al=0;
-for i=1:length(S_frames)
-    
-    if i==1
-        if fr_no(i,1)>fr_nu(i,1)
-            scatter(c_Position(1:fr_nu(i,1),1),c_Position(1:fr_nu(i,1),2),20,eod_Pos(1:fr_nu(i,1),1),'filled')
-            position=[c_Position(1:fr_nu(i,1),1),c_Position(1:fr_nu(i,1),2)];
-            distance=dist_bt_points(position);
-        elseif fr_no(i,1)<=fr_nu(i,1)
-            
-            scatter(c_Position(1:fr_no(i,1),1),c_Position(1:fr_no(i,1),2),20,eod_Pos(1:fr_no(i,1),1),'filled')
-            position=[c_Position(1:fr_nu(i,1),1),c_Position(1:fr_nu(i,1),2)];
-            distance=dist_bt_points(position);
-        end
-        
-        al=al+2;
-    else
-        
-        if fr_no(i,1)>fr_nu(i,1)
-            scatter(c_Position(1:fr_nu(i,1),al+1),c_Position(1:fr_nu(i,1),al+2),20,eod_Pos(1:fr_nu(i,1),1),'filled')
-            
-        elseif fr_no(i,1)<=fr_nu(i,1)
-            
-            scatter(c_Position(1:fr_no(i,1),al+1),c_Position(1:fr_no(i,1),al+2),20,eod_Pos(1:fr_no(i,1),1),'filled')
-            
-        end
-        al=al+2;
-        
-        
-        
-    end
-end
-%% Distance measurement
-distance=[];
-al=0;
-clear position
-for i=1:length(S_frames)
-    
-    if i==1
-        if fr_no(i,1)>fr_nu(i,1)
-            position=[c_Position(1:fr_nu(i,1),1),c_Position(1:fr_nu(i,1),2)];
-            distance(:,i)=dist_bt_points(position);
-            scatter(c_Position(1:fr_nu(i,1),1),c_Position(1:fr_nu(i,1),2),20,eod_Pos(1:fr_nu(i,1),1),'filled')
-            
-        elseif fr_no(i,1)<=fr_nu(i,1)
-            
-            position=[c_Position(1:fr_nu(i,1),1),c_Position(1:fr_nu(i,1),2)];
-            distance(:,i)=dist_bt_points(position);
-        end
-        
-        al=al+2;
-    else
-        
-        if fr_no(i,1)>fr_nu(i,1)
-            position=[c_Position(1:fr_nu(i,1),al+1),c_Position(1:fr_nu(i,1),al+2)];
-            distance(1:length(position)-1,i)=dist_bt_points(position);
-        elseif fr_no(i,1)<=fr_nu(i,1)
-            
-            position=[c_Position(1:fr_nu(i,1),al+1),c_Position(1:fr_nu(i,1),al+2)];
-            distance(1:length(position)-1,i)=dist_bt_points(position);
-        end
-        al=al+2;
-        
-        
-        
-    end
-    clear position
-    
-end
-
-
-%% Speed
-
-speed=(distance)*1/30;
-figure
-for i = 1:11
-    plot(speed(:,i))
-    hold all
-end
+%plotting-eod/position plot
+%dist_speed-speed/position plot
+%
